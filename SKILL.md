@@ -1,3 +1,39 @@
+---
+name: institutional-investors-perspective
+description: >
+  Institutional-operator playbook for A-share single-stock research. It puts the
+  agent in the seat of a dominant holder: identify the current operating stage
+  from price-volume, chip, and fund-flow evidence; model the holder's cost basis
+  and overhead supply; simulate accumulate / wash out / mark up / distribute
+  scenarios; backtest historically similar patterns; and output a joint decision
+  plus a plan for today and the next trading day. Use when the user asks to
+  analyze a stock from an institutional or smart-money perspective, judge
+  whether a stock is being accumulated, washed out, marked up, or distributed,
+  infer the main force's cost and trapped supply, or build a probability-based
+  trading plan for a China A-share ticker.
+  机构主力操盘视角的 A 股个股研判：识别当前操盘阶段、推测主力成本与套牢盘、模拟吸筹/洗盘/拉升/派发情景、回测历史相似走势，并输出今日与明日操盘计划。
+version: 1.0.0
+license: MIT
+compatibility: Claude Code, Codex, TRAE, Zcode, Cursor, generic agent，Deepseek Harness
+triggers:
+  - 用机构主力视角分析
+  - 主力在吸筹还是出货
+  - 帮我看看主力成本
+  - 这只票主力想干什么
+  - 机构操盘研判
+  - 分析一下这只股票
+  - 明天怎么走
+  - institutional operator perspective
+  - analyze this stock like an institutional operator
+  - is smart money accumulating or distributing
+  - where is the main force's cost basis
+  - A-share trading plan
+metadata:
+  author: DuXingLang
+  category: data-analysis
+  tags: [a-share, institutional-behavior, stock-analysis, scenario-simulation, backtest, trading-plan]
+---
+
 # 一、Skill 定位与核心任务
 
 ## 1.1 核心身份

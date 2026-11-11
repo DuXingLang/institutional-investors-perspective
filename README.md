@@ -18,7 +18,7 @@
 
 本 Skill 面向 A 股个股研究。当用户提供一只股票时，Agent 不再只回答「明天涨不涨」，而是切换到「已经持有大量筹码的机构主力」视角，围绕筹码、成本、抛压、资金效率与退出流动性进行分析，输出今天与明天的可执行交易预案。
 
-它是一套**纯提示词工作流**：本仓库当前只包含 `SKILL.md`，不携带行情接口、脚本、模型或数据文件。实时行情、历史 K 线、资金流向、筹码分布、板块与新闻数据，均通过运行环境中已安装的 Skill / MCP 获取；数据缺失时，Agent 必须明确标注并降低置信度。
+它是一套**纯提示词工作流**：核心内容只有 `SKILL.md`，不携带行情接口、脚本、模型或数据文件。实时行情、历史 K 线、资金流向、筹码分布、板块与新闻数据，均通过运行环境中已安装的 Skill / MCP 获取；数据缺失时，Agent 必须明确标注并降低置信度。
 
 > **重要边界**：所谓「主力行为」「主力成本」都是基于公开行情特征的行为推演与假设，不代表能够识别真实机构账户、真实持仓或真实操盘意图。本项目不构成投资建议，也不保证收益。
 
@@ -279,6 +279,8 @@ FinalScore = 0.30 × BehaviorScore
 ## 安装与使用
 
 1. 将本目录放入 Agent 运行环境所配置的 skills 目录，确保 `SKILL.md` 可被加载；如果使用 SkillHub，可按目录 slug 安装。或者直接跟你的Agent说：
+
+   `帮我安装这个skill：https://github.com/DuXingLang/institutional-investors-perspective`
 2. 在对话中直接提出分析请求，例如「用机构主力视角分析 600000」或「判断这只票主力是在吸筹还是出货」。
 3. 可选输入：你的真实持仓成本与仓位、观察周期、风险偏好、重点关注的价格位。真实持仓会被单独建模，不与假设的机构持仓混合。
 
@@ -291,7 +293,7 @@ FinalScore = 0.30 × BehaviorScore
 帮我从主力的视觉分析一下XXXX这只股票今天及明天的走势。
 ```
 
-**兼容性说明**：当前 `SKILL.md` 为纯 Markdown，没有 YAML frontmatter。如果所用 Agent 依赖 frontmatter 中的 `name` / `description` 进行技能发现，安装前需要补充相应元数据。
+**元数据与技能发现**：`SKILL.md` 顶部已内置 YAML frontmatter，包含 `name`、`description`、`version`、`license`、`compatibility`、`triggers` 与 `metadata` 字段。`description` 同时写明能力边界与适用场景，`triggers` 覆盖「机构主力视角分析」「主力在吸筹还是出货」「帮我看看主力成本」等中文说法与英文说法，便于 Agent 在扫描技能列表时完成匹配。若你的运行时只读取特定字段（例如仅 `name` 与 `description`），其余字段可安全忽略。
 
 **数据前提**：本 Skill 不自带行情源。需要至少接入实时行情与历史 K 线工具；资金、筹码、板块和新闻数据越完整，结论越可靠。缺少必要数据时，Agent 应明确标注缺口、降低置信度，而不是编造数据。
 
@@ -347,7 +349,8 @@ FinalScore = 0.30 × BehaviorScore
 ```text
 institutional-investors-perspective/
 ├── README.md   # 中英双语说明（本文件）
-└── SKILL.md    # Skill 主规范：工作流、评分模型、报告模板与执行规则
+├── SKILL.md    # Skill 主规范：YAML frontmatter、工作流、评分模型、报告模板与执行规则
+└── LICENSE     # MIT 许可证
 ```
 
 `SKILL.md` 是唯一的行为规范；本 README 仅作说明。如两者冲突，以 `SKILL.md` 为准。
@@ -364,7 +367,7 @@ institutional-investors-perspective/
 
 This skill is built for single-stock research in the A-share market. When the user supplies a stock, the agent does not stop at “will it rise tomorrow?” It steps into the role of a large institutional holder that already owns a meaningful position and reasons about chips, cost, overhead supply, capital efficiency, and exit liquidity. The result is an actionable plan for today and the next trading day.
 
-It is a **prompt-only workflow**: this repository currently contains only `SKILL.md`—no market-data adapters, scripts, models, or datasets. Quotes, historical bars, fund flow, chip distribution, sector data, and news must come from Skills or MCP tools already installed in the runtime. When data is missing, the agent must flag the gap and lower its confidence.
+It is a **prompt-only workflow**: the payload is just `SKILL.md`—no market-data adapters, scripts, models, or datasets. Quotes, historical bars, fund flow, chip distribution, sector data, and news must come from Skills or MCP tools already installed in the runtime. When data is missing, the agent must flag the gap and lower its confidence.
 
 > **Important boundary:** “Institutional behavior” and “institutional cost” are behavioral inferences and assumptions derived from public market features. They do not identify real institutional accounts, holdings, or trading intent. This project is not investment advice and does not guarantee returns.
 
@@ -624,7 +627,9 @@ Reports must distinguish:
 
 ## Install and use
 
-1. Place this directory in the skills directory configured for the agent runtime so that `SKILL.md` can be loaded. If you use SkillHub, install it by directory slug.
+1. Place this directory in the skills directory configured for the agent runtime so that `SKILL.md` can be loaded. If you use SkillHub, install it by directory slug. Or just tell your agent:
+
+   `Install this skill: https://github.com/DuXingLang/institutional-investors-perspective`
 2. Ask for an analysis directly, for example “Analyze 600000 from the institutional operator's perspective” or “Is the operator accumulating or distributing this stock?”
 3. Optional inputs: your real cost basis and position size, holding horizon, risk preference, and key price levels. A real position is modeled separately from the hypothetical institutional position.
 
@@ -634,9 +639,10 @@ Example request:
 Analyze 600000 from the institutional operator's perspective.
 Assume I already hold a large position with a cost range of 10.2–10.8.
 Identify the current operating stage and give me a plan for today and tomorrow.
+From the operator's perspective, analyze how stock XXXX will trade today and tomorrow.
 ```
 
-**Compatibility note**: `SKILL.md` is plain Markdown and currently has no YAML frontmatter. If your agent relies on `name` / `description` frontmatter for skill discovery, add that metadata before installation.
+**Metadata and skill discovery**: `SKILL.md` starts with YAML frontmatter declaring `name`, `description`, `version`, `license`, `compatibility`, `triggers`, and `metadata`. The description states both the capability boundary and the situations it applies to, and `triggers` covers Chinese and English phrasings such as “用机构主力视角分析”, “主力在吸筹还是出货”, and “institutional operator perspective”, so an agent scanning the skill list can match the request. Runtimes that read only specific fields—typically `name` and `description`—can safely ignore the rest.
 
 **Data prerequisite**: the skill does not bundle a market-data source. At minimum, connect real-time quote and historical-bar tools; richer fund-flow, chip, sector, and news data improves reliability. When required data is missing, the agent must flag the gap and lower confidence rather than fabricate it.
 
@@ -692,7 +698,8 @@ Full fields and example JSON are in Section 10 of `SKILL.md`. In an implementati
 ```text
 institutional-investors-perspective/
 ├── README.md   # Bilingual documentation (this file)
-└── SKILL.md    # Primary skill specification: workflow, scoring models, report template, execution rules
+├── SKILL.md    # Primary skill specification: YAML frontmatter, workflow, scoring models, report template, execution rules
+└── LICENSE     # MIT license
 ```
 
 `SKILL.md` is the single source of behavioral truth. This README is documentation only; if the two conflict, `SKILL.md` prevails.
